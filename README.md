@@ -1,5 +1,5 @@
 # task-tracker
-Download the TaskTracker.jar file if you just want to use it. <br>
+Download the TaskTracker.jar file if you just want to use it. <br><br>
 Simple task tracker overlay that says number of completed tasks, tasks/hour, average handle time, total seconds of use and total time in last task
 
 Default buttons are: <br>
