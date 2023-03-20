@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -42,8 +43,9 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
     private static int fontSize = 20;
     private static Font font = new Font("Arial", Font.BOLD, fontSize);
     private static JFrame frame;
-    DecimalFormat df2 = new DecimalFormat("0.00");
-    DecimalFormat df0 = new DecimalFormat("0");
+    static DecimalFormat df2 = new DecimalFormat("0.00");
+    static DecimalFormat df0 = new DecimalFormat("0");
+    static DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
     
     public TaskTracker() {
         this.setPreferredSize(new Dimension(width, height));
@@ -69,7 +71,7 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
         		startTime = System.currentTimeMillis();
         	}
             repaint();
-            System.out.println("Total tasks: "+tasks+"Start time: "+milToSec(startTime)+"\nTime in task: "+milToSec(timeInTask)+"\nTotal time: "+milToSec(totalTime)+"\nAHT: "+averageHandleTime+"\nTPH: "+tasksPerHour);
+            System.out.println("Total tasks: "+tasks+"Start time: "+TimeFormatter.timeFormat(startTime)+"\nTime in task: "+TimeFormatter.timeFormat(timeInTask)+"\nTotal time: "+TimeFormatter.timeFormat(totalTime)+"\nAHT: "+averageHandleTime+"\nTPH: "+tasksPerHour);
         } else if (e.getKeyCode() == substractButton) {
             tasks--;
             repaint();
@@ -109,7 +111,7 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
         g.setColor(Color.WHITE);
         g.setFont(font);
         
-        String counterStr = "Total tasks: "+df0.format(tasks)+"\nTime in task: "+df2.format(milToSec(timeInTask))+"\nTotal time: "+df2.format(milToSec(totalTime))+"\nAHT: "+df2.format(averageHandleTime)+"\nTPH: "+df2.format(tasksPerHour);
+        String counterStr = "Total tasks: "+df0.format(tasks)+"\nTime in task: "+TimeFormatter.timeFormat(timeInTask)+"\nTotal time: "+TimeFormatter.timeFormat(totalTime)+"\nAHT: "+df2.format(averageHandleTime)+"\nTPH: "+df2.format(tasksPerHour);
 
         printedVariables = 0;
         maxPrintedVariables = printedVariables;
@@ -130,7 +132,10 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
         System.out.println(maxPrintedVariables);
     }
     
-    public static void main(String[] args){      	
+    public static void main(String[] args){    
+    	decimalFormatSymbols.setDecimalSeparator('.');
+        df2.setDecimalFormatSymbols(decimalFormatSymbols);
+        df0.setDecimalFormatSymbols(decimalFormatSymbols);
     	TaskTracker ui = new TaskTracker();
         frame = new JFrame();
         frame.setTitle("Task Tracker");
