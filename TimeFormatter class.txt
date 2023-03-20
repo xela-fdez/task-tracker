@@ -1,0 +1,16 @@
+public class TimeFormatter{
+
+	public String TimerFormatter(long mil){
+
+		if(mil > 60*60*1000){
+			return String.format("%02d:%02d:%02d.02d", mil/3600000, (mil%360000)/60000, (mil%60000)/1000, mil%1000);
+		}
+		else if(mil > 60*1000){
+			return String.format("%02d:%02d.02d", mil/60000, mil%60000/1000, mil%1000);
+		}
+		else {
+			return String.format("%02d.02d", mil/1000, mil%1000);
+		}
+
+	}
+}
