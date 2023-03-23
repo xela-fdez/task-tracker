@@ -6,5 +6,6 @@ Default buttons are: <br>
 PgDown - add 1 task completed <br>
 PgUp - substract 1 task completed <br>
 End - reset all the parameters <br>
-EQUAL - Makes the UI and the font bigger  (On QWERTY with Ñ keyboards it's the '+' key) <br>
-MINUS - Makes the UI and the font smaller
+EQUAL - makes the UI and the font bigger  (On QWERTY with Ñ keyboards it's the '+' key) <br>
+MINUS - makes the UI and the font smaller <br>
+HOME - pauses the timer and unpauses it when pressed again. Text gets red to know we are paused

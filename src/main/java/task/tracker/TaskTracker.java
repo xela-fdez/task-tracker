@@ -20,12 +20,13 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
     
     private static final long serialVersionUID = 1L;
     
-    //This are the buttons being used, by default they are in order PgDown, PgUp, End, PLUS, MINUS
+    //This are the buttons being used, by default they are in order PgDown, PgUp, End, PLUS, MINUS, HOME
     private final int addButton = NativeKeyEvent.VC_PAGE_DOWN;
     private final int substractButton =  NativeKeyEvent.VC_PAGE_UP;
     private final int resetButton =  NativeKeyEvent.VC_END;
     private final int biggerUI = NativeKeyEvent.VC_EQUALS;
     private final int smallerUI = NativeKeyEvent.VC_MINUS;
+    private final int pause = NativeKeyEvent.VC_HOME;
     
     //Variables
     private float tasks = 0;
@@ -33,16 +34,25 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
     private float averageHandleTime = 0;
     private float tasksPerHour = 0;
     private long totalTime = 0;
-    private static long startTime = 0;
+    private long startTime = 0;
+    private long pauseTime = 0;
+    
+    private boolean isPaused = false;
+    
     private int printedVariables = 0;
     private int maxPrintedVariables = 0;
+    
     private static int width = 1;
     private static int height = 1;
     private int widthNow = 1;
     private int heightNow = 1;
+    
     private static int fontSize = 20;
     private static Font font = new Font("Arial", Font.BOLD, fontSize);
+    private Color fontColor = Color.WHITE;
+    
     private static JFrame frame;
+    
     static DecimalFormat df2 = new DecimalFormat("0.00");
     static DecimalFormat df0 = new DecimalFormat("0");
     static DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
@@ -58,7 +68,7 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
     }
     
     public void nativeKeyPressed(NativeKeyEvent e) {
-        if (e.getKeyCode() == addButton) { 
+        if (e.getKeyCode() == addButton && !isPaused) { 
         	tasks++;
         	if(startTime == 0) {
         		startTime = System.currentTimeMillis();
@@ -72,11 +82,11 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
         	}
             repaint();
             System.out.println("Total tasks: "+tasks+"Start time: "+TimeFormatter.timeFormat(startTime)+"\nTime in task: "+TimeFormatter.timeFormat(timeInTask)+"\nTotal time: "+TimeFormatter.timeFormat(totalTime)+"\nAHT: "+averageHandleTime+"\nTPH: "+tasksPerHour);
-        } else if (e.getKeyCode() == substractButton) {
+        } else if (e.getKeyCode() == substractButton && !isPaused) {
             tasks--;
             repaint();
         }
-        else if (e.getKeyCode() == resetButton  && frame.isFocused()) {
+        if (e.getKeyCode() == resetButton  && frame.isFocused()) {
         	//int confirmation = JOptionPane.showConfirmDialog(new Component(), "Are you sure you want to reset all numbers?");        	 
         	int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to reset all numbers?","Reset Confirmation",JOptionPane.YES_NO_OPTION);
         	if(confirmation == 0) {
@@ -99,6 +109,20 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
         	height=(int) (0.9F*height);
         	repaint();
         }
+        
+        if (e.getKeyCode() == pause && frame.isFocused() && !isPaused) {
+        	fontColor = Color.RED;
+        	isPaused = true;
+        	pauseTime = System.currentTimeMillis();
+        	repaint();
+        }
+        else if(e.getKeyCode() == pause && frame.isFocused() && isPaused) {
+        	fontColor = Color.WHITE;
+        	isPaused = false;
+        	startTime+=System.currentTimeMillis()-pauseTime;
+        	pauseTime = 0;
+        	repaint();
+        }
         System.out.println(e.getKeyCode());
     }
     
@@ -108,7 +132,7 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
     
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.WHITE);
+        g.setColor(fontColor);
         g.setFont(font);
         
         String counterStr = "Total tasks: "+df0.format(tasks)+"\nTime in task: "+TimeFormatter.timeFormat(timeInTask)+"\nTotal time: "+TimeFormatter.timeFormat(totalTime)+"\nAHT: "+df2.format(averageHandleTime)+"\nTPH: "+df2.format(tasksPerHour);
