@@ -80,7 +80,7 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
     public void nativeKeyPressed(NativeKeyEvent e) {
         if (e.getKeyCode() == addButton && !isPaused) { 
         	tasks++;
-        	targetPercent++;
+        	targetPercent+=(1/AdProgram.SPTarget);
         	if(startTime == 0) {
         		startTime = System.currentTimeMillis();
         	}
@@ -95,7 +95,7 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
             System.out.println("Total tasks: "+tasks+"Start time: "+TimeFormatter.timeFormat(startTime)+"\nTime in task: "+TimeFormatter.timeFormat(timeInTask)+"\nTotal time: "+TimeFormatter.timeFormat(totalTime)+"\nAHT: "+averageHandleTime+"\nTPH: "+tasksPerHour);
         } else if (e.getKeyCode() == substractButton && !isPaused) {
             tasks--;
-            targetPercent--;
+            targetPercent-=(1/AdProgram.SPTarget);
             repaint();
         }
         if (e.getKeyCode() == resetButton  && frame.isFocused()) {
@@ -213,24 +213,24 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
         
         chooseAdProgram = new JComboBox<String>(); 
         chooseAdProgram.setUI(new CustomComboBox());
-		chooseAdProgram.setFont(font);
-		chooseAdProgram.setModel(new DefaultComboBoxModel<String>(new String[] { "SP", "SD", "SB", "SBV", "Stores", "Books", "Store Spotlight"}));
-		((JLabel) chooseAdProgram.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
-		chooseAdProgram.setFocusable(false);
-		
-		UIManager.put("ProgressBar.selectionBackground", Color.WHITE);
-		progressBar = new JProgressBar(0,100);
-		progressBar.setUI(new CustomProgressBar());
-		progressBar.setFont(font);
-		progressBar.setBackground(Color.BLACK);
-		progressBar.setForeground(new Color(76,175,80));
-		progressBar.setValue((int) targetPercent);
-		progressBar.setStringPainted(true);
-		progressBar.setBounds(0, 0, 300, 300);
-		progressBar.setVisible(true);
+	chooseAdProgram.setFont(font);
+	chooseAdProgram.setModel(new DefaultComboBoxModel<String>(new String[] { "SP", "SD", "SB", "SBV", "Stores", "Books", "Store Spotlight"}));
+	((JLabel) chooseAdProgram.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+	chooseAdProgram.setFocusable(false);
+
+	UIManager.put("ProgressBar.selectionBackground", Color.WHITE);
+	progressBar = new JProgressBar(0,100);
+	progressBar.setUI(new CustomProgressBar());
+	progressBar.setFont(font);
+	progressBar.setBackground(Color.BLACK);
+	progressBar.setForeground(new Color(76,175,80));
+	progressBar.setValue((int) targetPercent);
+	progressBar.setStringPainted(true);
+	progressBar.setBounds(0, 0, 300, 300);
+	progressBar.setVisible(true);
 
 
-		frame.repaint();
+	frame.repaint();
 
         try {
             GlobalScreen.registerNativeHook();
