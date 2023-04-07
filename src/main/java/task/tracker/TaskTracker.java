@@ -7,13 +7,9 @@ import java.awt.Graphics;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
@@ -33,8 +29,7 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
     private final int pause = NativeKeyEvent.VC_HOME;
     
     //Variables
-    private float tasks = 0;					//The raw number of tasks done
-    //private float tasksValue = 0;				//The tasks value depending on Ad program chosen
+    private float tasks = 0;
     private long timeInTask = 0;
     private float averageHandleTime = 0;
     private float tasksPerHour = 0;
@@ -54,10 +49,9 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
     
     private static int fontSize = 20;
     private static Font font = new Font("Arial", Font.BOLD, fontSize);
-    private static Color fontColor = Color.WHITE;
+    private Color fontColor = Color.WHITE;
     
     private static JFrame frame;
-    private static JComboBox<String> chooseAdProgram;
     
     static DecimalFormat df2 = new DecimalFormat("0.00");
     static DecimalFormat df0 = new DecimalFormat("0");
@@ -140,18 +134,17 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
         super.paintComponent(g);
         g.setColor(fontColor);
         g.setFont(font);
-        g.setPaintMode();
         
         String counterStr = "Total tasks: "+df0.format(tasks)+"\nTime in task: "+TimeFormatter.timeFormat(timeInTask)+"\nTotal time: "+TimeFormatter.timeFormat(totalTime)+"\nAHT: "+df2.format(averageHandleTime)+"\nTPH: "+df2.format(tasksPerHour);
 
         printedVariables = 0;
-        maxPrintedVariables = printedVariables+1;
+        maxPrintedVariables = printedVariables;
         for (String line : counterStr.split("\n")) {
         	widthNow = g.getFontMetrics().stringWidth(line);
         	heightNow = g.getFontMetrics().getHeight();
             printedVariables++;
             g.drawString(line, (getWidth()-widthNow)/2, printedVariables*heightNow);
-            if(maxPrintedVariables < printedVariables+1) maxPrintedVariables = printedVariables+1;
+            if(maxPrintedVariables < printedVariables) maxPrintedVariables = printedVariables;
             if((width-40)< widthNow) width = widthNow+40;
             if((height)< heightNow) height = (int)(heightNow);
         }
@@ -160,20 +153,7 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
         	System.out.println("Size change "+width+"x"+height);
         	System.out.println("Now sizes "+widthNow+"x"+heightNow);
         }
-        
-        chooseAdProgram.setBounds(0, height*(maxPrintedVariables-1),width-15, height+g.getFontMetrics().getDescent()+1);
-        chooseAdProgram.setFont(font);
-		chooseAdProgram.setBackground(Color.BLACK);
-		chooseAdProgram.setForeground(fontColor);
-		((JLabel) chooseAdProgram.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
-
-		//((JLabel) chooseAdProgram.getComponent(1)).setBounds(0, height*(maxPrintedVariables-1),10, 10);
-		
-        frame.getContentPane().add(chooseAdProgram);
-        
-        chooseAdProgram.repaint();
-        
-        this.setBounds(0, 0, width, height*maxPrintedVariables);
+        System.out.println(maxPrintedVariables);
     }
     
     public static void main(String[] args){    
@@ -188,17 +168,6 @@ public class TaskTracker extends JPanel implements NativeKeyListener {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setAlwaysOnTop(true);
-        
-        chooseAdProgram = new JComboBox<String>(); 
-        chooseAdProgram.setUI(new CustomComboBox());
-		chooseAdProgram.setFont(font);
-		chooseAdProgram.setModel(new DefaultComboBoxModel<String>(new String[] { "SP", "SD", "SB", "SBV", "Stores", "Books", "Store Spotlight"}));
-		((JLabel) chooseAdProgram.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
-
-		
-		
-		frame.repaint();
-		//frame.getContentPane().add(chooseAdProgram);
 
         try {
             GlobalScreen.registerNativeHook();
